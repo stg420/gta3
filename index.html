@@ -34,7 +34,22 @@
 <body>
 <div id="loading">Loading GTA III...</div>
 <script>
-  
+  window.addEventListener('unhandledrejection', function(e) {
+    if (e.reason && e.reason.name && e.reason.name.indexOf('DocumentError') !== -1) {
+      e.preventDefault();
+      return;
+    }
+    document.getElementById('loading').textContent = 'ERR: ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+  });
+  (function() {
+    var _rpl = Element.prototype.requestPointerLock;
+    if (_rpl) Element.prototype.requestPointerLock = function() {
+      try { var p = _rpl.call(this); if (p && p.catch) p.catch(function(){}); return p; }
+      catch(e) {}
+    };
+  })();
+</script>
+<script>
   (function() {
     var ORIG_FETCH = window.fetch;
     window.fetch = function(url, opts) {
@@ -93,9 +108,7 @@
   (function() {
     var RealAC = window.AudioContext || window.webkitAudioContext;
     if (!RealAC) return;
-
     var contexts = [];
-
     function resumeAll() {
       for (var i = 0; i < contexts.length; i++) {
         var ctx = contexts[i];
@@ -105,7 +118,6 @@
     document.addEventListener('click', resumeAll);
     document.addEventListener('touchstart', resumeAll);
     document.addEventListener('keydown', resumeAll);
-
     var Wrapper = function(options) {
       var ctx = new RealAC(options);
       contexts.push(ctx);
