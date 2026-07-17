@@ -159,6 +159,9 @@
     if (Module.canvas) {
       Module.canvas.width = window.innerWidth;
       Module.canvas.height = window.innerHeight;
+      if (typeof Module._SetWindowSize === 'function') {
+        Module._SetWindowSize(window.innerWidth, window.innerHeight);
+      }
       if (typeof window.re3_resize === "function") {
         window.re3_resize();
       }
