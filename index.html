@@ -16,8 +16,8 @@
   }
   canvas.emscripten {
     display: block;
-    width: min(100vw, calc(100vh * 16 / 9));
-    height: min(100vh, calc(100vw * 9 / 16));
+    width: 100vw;
+    height: 100vh;
     image-rendering: auto;
   }
   #loading {
@@ -153,6 +153,17 @@
     }
   };
   Module.setStatus('Loading...');
+</script>
+<script>
+  window.addEventListener('resize', function() {
+    if (Module.canvas) {
+      Module.canvas.width = window.innerWidth;
+      Module.canvas.height = window.innerHeight;
+      if (typeof window.re3_resize === "function") {
+        window.re3_resize();
+      }
+    }
+  });
 </script>
 <script src="re3.js"></script>
 </body>
